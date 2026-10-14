@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="../storeInfrastructure/storeInfrastructure.csproj" />
+  <Project Path="storeDomain.csproj" />
+</Solution>

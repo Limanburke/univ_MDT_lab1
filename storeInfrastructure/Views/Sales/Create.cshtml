@@ -1,0 +1,49 @@
+﻿@model storeInfrastructure.Models.CreateSaleViewModel
+@{
+    ViewData["Title"] = "New Sale";
+}
+
+<h3>Register New Sale</h3>
+
+@if (TempData["ErrorMessage"] is string error)
+{
+    <div class="notice">
+        <strong>ERROR:</strong> @error
+    </div>
+}
+
+<form asp-action="Create" method="post" style="max-width: 450px;">
+    @Html.AntiForgeryToken()
+
+    <div style="margin-bottom: 12px;">
+        <label asp-for="DepartmentId"><strong>Department:</strong></label><br />
+        <select asp-for="DepartmentId" asp-items="Model.Departments" style="width: 100%;"></select>
+        <span asp-validation-for="DepartmentId" style="color: red;"></span>
+    </div>
+
+    <div style="margin-bottom: 12px;">
+        <label asp-for="EmployeeId"><strong>Cashier / Employee:</strong></label><br />
+        <select asp-for="EmployeeId" asp-items="Model.Employees" style="width: 100%;"></select>
+        <span asp-validation-for="EmployeeId" style="color: red;"></span>
+    </div>
+
+    <div style="margin-bottom: 12px;">
+        <label asp-for="ProductId"><strong>Product:</strong></label><br />
+        <select asp-for="ProductId" asp-items="Model.Products" style="width: 100%;"></select>
+        <span asp-validation-for="ProductId" style="color: red;"></span>
+    </div>
+
+    <div style="margin-bottom: 12px;">
+        <label asp-for="Quantity"><strong>Quantity:</strong></label><br />
+        <input asp-for="Quantity" type="number" min="1" step="1" required style="width: 100%;" />
+        <span asp-validation-for="Quantity" style="color: red;"></span>
+    </div>
+
+    <div style="margin-bottom: 15px;">
+        <label asp-for="CustomerId"><strong>Customer (optional):</strong></label><br />
+        <select asp-for="CustomerId" asp-items="Model.Customers" style="width: 100%;"></select>
+    </div>
+
+    <button type="submit">Submit Sale</button>
+    <a asp-action="Index" style="margin-left: 10px; color: #000;">Back to list</a>
+</form>

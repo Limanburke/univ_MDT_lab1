@@ -1,0 +1,87 @@
+﻿@model IReadOnlyList<storeDomain.Model.VEmployeeDirectory>
+@{
+    ViewData["Title"] = "Employees";
+}
+
+<h3>Employee Directory</h3>
+
+@if (TempData["SuccessMessage"] is string success)
+{
+    <div class="notice">
+        <strong>SUCCESS:</strong> @success
+    </div>
+}
+
+@if (TempData["ErrorMessage"] is string error)
+{
+    <div class="notice">
+        <strong>ERROR:</strong> @error
+    </div>
+}
+
+@if (Model == null || Model.Count == 0)
+{
+    <p>No employee records found.</p>
+}
+else
+{
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Department</th>
+                <th>Position</th>
+                <th>Hire Date</th>
+                <th>Account Status</th>
+                <th>Action</th>
+                <th>Updated At</th>
+                <th>Updated By</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var emp in Model)
+            {
+                <tr>
+                    <td>@emp.EmployeeId</td>
+                    <td>@emp.FullName</td>
+                    <td>@emp.DepartmentName</td>
+                    <td>@emp.PositionTitle</td>
+                    <td>@emp.HireDate.ToString("yyyy-MM-dd")</td>
+                    <td>
+                        @if (emp.IsDeleted)
+                        {
+                            <span>Dismissed</span>
+                        }
+                        else if (emp.IsAccountActive)
+                        {
+                            <span>Active</span>
+                        }
+                        else
+                        {
+                            <span>Inactive</span>
+                        }
+                    </td>
+                    <td>
+                        @if (!emp.IsDeleted)
+                        {
+                            <form asp-action="Fire" method="post" style="display: inline;">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="employeeId" value="@emp.EmployeeId" />
+                                <button type="submit" onclick="return confirm('Dismiss employee @emp.FullName and deactivate account?');">
+                                    Dismiss
+                                </button>
+                            </form>
+                        }
+                        else
+                        {
+                            <span>-</span>
+                        }
+                    </td>
+                    <td>@(emp.UpdatedAt.ToString("dd.MM.yyyy HH:mm"))</td>
+                    <td>@emp.UpdatedByName</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

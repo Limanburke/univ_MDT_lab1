@@ -1,0 +1,80 @@
+﻿@model IReadOnlyList<storeDomain.Model.VSalesSummary>
+@{
+    ViewData["Title"] = "Sales";
+}
+
+<h3>Sales Transactions</h3>
+
+<p>
+    [ <a asp-action="Create">Register New Sale</a> ]
+</p>
+
+@if (TempData["SuccessMessage"] is string success)
+{
+    <div class="notice">
+        <strong>SUCCESS:</strong> @success
+    </div>
+}
+
+@if (TempData["ErrorMessage"] is string error)
+{
+    <div class="notice">
+        <strong>ERROR:</strong> @error
+    </div>
+}
+
+@if (Model == null || Model.Count == 0)
+{
+    <p>No sales records found.</p>
+}
+else
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Receipt ID</th>
+                <th>Date</th>
+                <th>Department</th>
+                <th>Cashier</th>
+                <th>Customer</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Action</th>
+                <th>Updated At</th>
+                <th>Updated By</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var sale in Model)
+            {
+                <tr>
+                    <td>#@sale.TransactionId</td>
+                    <td>@(sale.TransactionDate?.ToString("dd.MM.yyyy HH:mm") ?? "-")</td>
+                    <td>@sale.DepartmentName</td>
+                    <td>@sale.CashierName</td>
+                    <td>@sale.CustomerName</td>
+                    <td>@(sale.TotalAmount?.ToString("0.00") ?? "-")</td>
+                    <td>@sale.Status</td>
+                    <td>
+                        @if (sale.Status == "Completed" && sale.TransactionId.HasValue)
+                        {
+                            <form asp-controller="Sales" asp-action="Cancel" method="post" style="display: inline;">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="transactionId" value="@sale.TransactionId" />
+                                <button type="submit" onclick="return confirm('Cancel receipt #@sale.TransactionId?');">
+                                    Cancel
+                                </button>
+                            </form>
+                        }
+                        else
+                        {
+                            <span>-</span>
+                        }
+                    </td>
+                    <td>@(sale.UpdatedAt?.ToString("dd.MM.yyyy HH:mm") ?? "-")</td>
+                    <td>@(sale.UpdatedByName ?? "-")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

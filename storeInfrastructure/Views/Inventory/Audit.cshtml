@@ -1,0 +1,37 @@
+﻿@model IReadOnlyList<storeDomain.Model.VUserAuditLog>
+@{
+    ViewData["Title"] = "Audit Log";
+}
+
+<h3>System Audit Log</h3>
+
+@if (Model == null || Model.Count == 0)
+{
+    <p>No audit records found.</p>
+}
+else
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Entity Type</th>
+                <th>Entity ID / Key</th>
+                <th>Details / Description</th>
+                <th>Updated At</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var entry in Model)
+            {
+                <tr>
+                    <td>@entry.Username</td>
+                    <td>@entry.EntityType</td>
+                    <td>@entry.EntityId</td>
+                    <td>@(entry.EntityDetails ?? "-")</td>
+                    <td>@(entry.UpdatedAt?.ToString("dd.MM.yyyy HH:mm:ss") ?? "-")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

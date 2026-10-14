@@ -1,0 +1,43 @@
+﻿@model IReadOnlyList<storeDomain.Model.VActiveProduct>
+@{
+    ViewData["Title"] = "Active Products";
+}
+
+<h3>Active Product Catalog</h3>
+
+@if (Model == null || Model.Count == 0)
+{
+    <p>No active products found</p>
+}
+else
+{
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>SKU</th>
+                <th>Product Name</th>
+                <th>Category</th>
+                <th>Supplier</th>
+                <th>Price</th>
+                <th>Updated At</th>
+                <th>Updated By</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.ProductId</td>
+                    <td>@item.Sku</td>
+                    <td>@item.ProductName</td>
+                    <td>@item.CategoryName</td>
+                    <td>@item.SupplierName</td>
+                    <td>@(item.Price?.ToString("0.00") ?? "-")</td>
+                    <td>@(item.UpdatedAt?.ToString("dd.MM.yyyy HH:mm") ?? "-")</td>
+                    <td>@(item.UpdatedByName ?? "-")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

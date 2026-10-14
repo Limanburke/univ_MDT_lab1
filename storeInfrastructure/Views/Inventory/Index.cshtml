@@ -1,0 +1,63 @@
+﻿@model IReadOnlyList<storeDomain.Model.VDepartmentInventory>
+@{
+    ViewData["Title"] = "Inventory";
+}
+
+<h3>Department Inventory</h3>
+
+@if (TempData["SuccessMessage"] is string success)
+{
+    <div class="notice">
+        <strong>SUCCESS:</strong> @success
+    </div>
+}
+
+@if (TempData["ErrorMessage"] is string error)
+{
+    <div class="notice">
+        <strong>ERROR:</strong> @error
+    </div>
+}
+
+@if (Model == null || Model.Count == 0)
+{
+    <p>No inventory records found.</p>
+}
+else
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Department</th>
+                <th>SKU</th>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Add Stock</th>
+                <th>Updated At</th>
+                <th>Updated By</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.DepartmentName</td>
+                    <td>@item.Sku</td>
+                    <td>@item.ProductName</td>
+                    <td>@item.Quantity</td>
+                    <td>
+                        <form asp-controller="Inventory" asp-action="AddStock" method="post" style="display: inline;">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="DepartmentId" value="@item.DepartmentId" />
+                            <input type="hidden" name="ProductId" value="@item.ProductId" />
+                            <input type="number" name="Quantity" min="1" step="1" required style="width: 70px;" placeholder="Qty" />
+                            <button type="submit">Add</button>
+                        </form>
+                    </td>
+                    <td>@(item.UpdatedAt?.ToString("dd.MM.yyyy HH:mm") ?? "-")</td>
+                    <td>@(item.UpdatedByName ?? "-")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
